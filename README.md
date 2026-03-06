@@ -41,6 +41,7 @@ TamaCoach는 클라우드 보안 환경(VPC) 내에서 실시간으로 동작하
 ---
 
 ## 🏗️ System Architecture
+```mermaid
 flowchart TD
     A[Input ctx/payload] --> B[agentcore_entry.invoke]
     B --> C[MultiAgentSupervisor]
@@ -55,6 +56,7 @@ flowchart TD
     I --> L[Final Output]
     J --> L
     K --> L
+```
 
 
 ### Multi-Agent Workflow
