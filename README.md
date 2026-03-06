@@ -36,11 +36,20 @@ TamaCoach는 클라우드 보안 환경(VPC) 내에서 실시간으로 동작하
 
 ### 4. 확장 가능한 AI 생태계 구축
 * **AWS API MCP 활용:** AWS Transcribe 및 Comprehend 서비스를 에이전트 워크플로우 내에 유기적으로 연동하여 멀티모달 데이터 처리 및 분석의 기반을 마련했습니다.
-* **독립적인 챗봇 시스템:** 무거운 멀티 에이전트 시스템과 사용자 응대용 챗봇 에이전트를 아키텍처상 분리하여 리소스 효율성을 극대화했습니다.
+* 
+### 5. 독립형 고성능 챗봇 시스템 (Independent Chatbot System)
+무거운 코칭 멀티 에이전트 시스템과 사용자 응대용 챗봇을 아키텍처상 완벽히 분리하여 리소스 효율성과 응답 속도를 극대화했습니다.
+* **LangChain 오케스트레이션:** 대화의 컨텍스트 유지와 도구 호출(Tool-calling) 제어를 LangChain 기반으로 매끄럽게 처리합니다.
+* **하이브리드 서치 (Hybrid Search):** 단순 키워드 검색의 한계를 넘어, 키워드와 벡터(Vector) 검색을 결합하여 정보 탐색의 재현율(Recall)을 극대화했습니다.
+* **RRF & Rerank 파이프라인:** 도출된 검색 결과들을 **RRF(Reciprocal Rank Fusion)** 알고리즘으로 병합하고, **Reranker**를 거쳐 가장 연관성 높은 정보만을 LLM에 주입함으로써 할루시네이션을 획기적으로 낮추었습니다.
 
 ---
 
 ## 🏗️ System Architecture
+
+### 1. Multi-Agent Coaching Workflow
+준병렬 구조(Quasi-parallel)를 통해 페르소나 분석 결과를 바탕으로 리포트와 38개의 퀘스트를 동시에 생성합니다.
+
 ```mermaid
 flowchart TD
     A[Input ctx/payload] --> B[agentcore_entry.invoke]
@@ -57,7 +66,50 @@ flowchart TD
     J --> L
     K --> L
 ```
+### 2. Independent Chatbot Architecture
+멀티 에이전트 시스템의 링 밖에 독립적으로 구성되어, 빠르고 정확한 실시간 질의응답을 수행합니다.
 
+```mermaid
+flowchart TD
+    User([User Request]) --> API[POST /api/chat]
+    API --> Orch[LangChain Orchestrator]
+
+    subgraph Agent_Hub [Agent Hub]
+        direction LR
+        Shop[Shopping]
+        Safe[Safety]
+        Act[Activity]
+        Week[Weekly]
+    end
+
+    subgraph RAG_Engine [Advanced RAG]
+        direction TB
+        Ret[Retriever] --> HS{Hybrid Search}
+        HS -->|Vector| PGV[(PGVector)]
+        HS -->|Keyword| BM25[BM25 Search]
+        PGV --> RRF[RRF Algorithm]
+        BM25 --> RRF
+        RRF --> Rerank[Reranker Model]
+    end
+
+    subgraph Tools [Action Tools]
+        direction LR
+        T1[Web Search]
+        T2[Fact Check]
+        T3[Context Store]
+    end
+
+    Orch --> Agent_Hub
+    Orch --> RAG_Engine
+    Orch --> Tools
+
+    Agent_Hub & Rerank & Tools --> Gen[Chat Generator]
+    Gen --> Response([Normalized Response])
+
+    style RRF fill:#fff4dd,stroke:#d4a017
+    style Rerank fill:#fff4dd,stroke:#d4a017
+    style PGV fill:#e1f5fe,stroke:#01579b
+```
 
 ### Multi-Agent Workflow
 1. **Supervisor Agent:** 전체 워크플로우 통제 및 데이터 라우팅
