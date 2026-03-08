@@ -3,7 +3,7 @@ TamaCoach: 멀티 에이전트 AI 퍼스널 코칭 서비스  클라우드 보�
 # 🎯 TamaCoach : 엔터프라이즈 보안 환경을 고려한 멀티 에이전트 AI 코칭 서비스
 
 ![AWS](https://img.shields.io/badge/AWS-232F3E?style=for-the-badge&logo=amazon-aws&logoColor=white)
-![Claude](https://img.shields.io/badge/Claude_3.5_Sonnet-D97757?style=for-the-badge&logo=anthropic&logoColor=white)
+![Claude](https://img.shields.io/badge/Claude_4.6_Sonnet-D97757?style=for-the-badge&logo=anthropic&logoColor=white)
 ![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
 
 TamaCoach는 클라우드 보안 환경(VPC) 내에서 실시간으로 동작하는 **멀티 에이전트(Multi-Agent) 기반 맞춤형 퍼스널 코칭 시스템**입니다. 
